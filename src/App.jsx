@@ -12,7 +12,6 @@ import {
   FileText,
   Gauge,
   Image,
-  Instagram,
   LayoutDashboard,
   Link2,
   Mail,
