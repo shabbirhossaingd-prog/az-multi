@@ -1,10 +1,12 @@
 {
   "name": "az-multi",
   "private": true,
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "scripts": {
+    "predev": "node scripts/patch-app.mjs",
     "dev": "vite",
+    "prebuild": "node scripts/patch-app.mjs",
     "build": "vite build",
     "preview": "vite preview"
   },
