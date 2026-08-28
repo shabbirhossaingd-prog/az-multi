@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './AppFixed.jsx'
 import AdsDock from './AdsManagerFixed.jsx'
+import AIControlCenter from './AIControlCenter.jsx'
 import { isSupabaseConfigured } from './lib/supabase.js'
 import './styles.css'
 import './phase2.css'
@@ -14,5 +15,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <App />
     <AdsDock />
+    <AIControlCenter />
   </React.StrictMode>,
 )
