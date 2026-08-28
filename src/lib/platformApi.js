@@ -1,15 +1,33 @@
-const base = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
+const envBase = (import.meta.env.VITE_API_BASE_URL || '').replace(/\/$/, '')
 
-export const apiBaseConfigured = Boolean(base)
+export function getApiBase() {
+  const saved = typeof window !== 'undefined' ? (localStorage.getItem('az-api-base-url') || '') : ''
+  return (saved || envBase).replace(/\/$/, '')
+}
+
+export const apiBaseConfigured = Boolean(getApiBase())
+
+export function saveApiBaseUrl(url) {
+  const clean = String(url || '').trim().replace(/\/$/, '')
+  if (!clean) {
+    localStorage.removeItem('az-api-base-url')
+    return ''
+  }
+  if (!/^https?:\/\//i.test(clean)) throw new Error('Use a full http:// or https:// API gateway URL.')
+  localStorage.setItem('az-api-base-url', clean)
+  return clean
+}
 
 export function oauthUrl(provider) {
-  if (!apiBaseConfigured) return null
+  const base = getApiBase()
+  if (!base) return null
   const returnTo = encodeURIComponent(window.location.origin)
   return `${base}/oauth/${String(provider).toLowerCase()}?returnTo=${returnTo}`
 }
 
 export async function apiRequest(path, options = {}) {
-  if (!apiBaseConfigured) throw new Error('Backend API is not configured yet.')
+  const base = getApiBase()
+  if (!base) throw new Error('Backend API is not configured yet. Add an API Gateway URL from AI Core / Settings.')
   const response = await fetch(`${base}${path}`, {
     headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
     ...options,
@@ -21,6 +39,24 @@ export async function apiRequest(path, options = {}) {
 
 export async function generateWithAI(payload) {
   return apiRequest('/api/ai/generate', { method: 'POST', body: JSON.stringify(payload) })
+}
+
+export async function saveAIProviderSecret(payload) {
+  return apiRequest('/api/settings/ai-provider', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function testAIConnection(payload = {}) {
+  return apiRequest('/api/ai/test', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}
+
+export async function getAIStatus() {
+  return apiRequest('/api/ai/status')
 }
 
 export async function publishSocialPost(payload) {
