@@ -1,11 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './AppFixed.jsx'
-import AdsDock from './AdsManager.jsx'
+import AdsDock from './AdsManagerFixed.jsx'
 import { isSupabaseConfigured } from './lib/supabase.js'
 import './styles.css'
 import './phase2.css'
 import './phase3.css'
+import './phase4.css'
 
 document.documentElement.dataset.backend = isSupabaseConfigured ? 'supabase' : 'demo'
 
